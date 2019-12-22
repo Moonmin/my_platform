@@ -1,27 +1,26 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse,HttpResponseRedirect
+from django.contrib import auth
 
 
 # Create your views here.
-from requests import auth
-
 
 def index(request):
 
     # return HttpResponse("hey")
     return render(request, "login.html")
 
-#处理登录请求
+# 处理登录请求
 def  user_login(request):
 
-#获取请求的方法是否为POST
+    # 获取请求的方法是否为POST
     if request.method == 'POST':
         #默认赋空值
-        user_name = request.POST.get('user_name','')
+        user_name = request.POST.get('username','')
         user_pwd = request.POST.get('password','')
-        # print("user_name",user_name)
-        # print("user_pwd",user_pwd)
+        print("user_name",user_name)
+        print("user_pwd",user_pwd)
         if(user_name == '' or user_pwd == ''):
             #当用户名或密码为空时，跳转回登录页面,并给出提示
             return render(request, 'login.html',
@@ -38,14 +37,22 @@ def  user_login(request):
                 # response.set_cookie("cuser_name",user_name,3600)
                 #对应用户名存入cookie的另一种方式，存入session表中
                 print("user_name111=", user_name)
-                request.session['cuser_name'] = user_name
-
+                # request.session['cuser_name'] = user_name
+                response =  HttpResponseRedirect("/manage/project_manage/")
+                response.set_cookie("user", user_name, 3600)
                 # 重定向请求
-                return HttpResponseRedirect("/manage/project_manage/")
+
             else:
                 # 如果数据返回值为None,说明用户或密码错误，跳回登录页
                 return render(request, 'login.html',
                               {'error': '用户名或密码错误'})
+
+    elif request.method == 'GET':
+        return render(request, 'login.html')
+    else:
+        return render(request, 'login.html', {'error': '非法请求！'})
+
+
 
 
 '''

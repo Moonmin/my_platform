@@ -22,7 +22,7 @@ urlpatterns = [
     # path 参数：1.router 2.view 调用的视图
     #首页，登录跳转至user_manage下的url.py管理
     path('', include('user_manage.urls')),
-    path('login', include('user_manage.urls')),
-
+    # path('login/', include('user_manage.urls')),
+    path("manage/", include("project_app.urls")),
     path('admin/', admin.site.urls),
 ]
